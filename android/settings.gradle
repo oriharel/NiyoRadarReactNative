@@ -1,0 +1,3 @@
+rootProject.name = 'NiyoRadar'
+
+include ':app'
