@@ -13,6 +13,7 @@ import {
   TouchableOpacity
 } from 'react-native';
 
+import App from "./app/app";
 import {GoogleSignin, GoogleSigninButton} from 'react-native-google-signin';
 
 class NiyoRadar extends Component {
@@ -61,16 +62,7 @@ class NiyoRadar extends Component {
 
     if (this.state.user) {
       return (
-        <View style={styles.container}>
-          <Text style={{fontSize: 18, fontWeight: 'bold', marginBottom: 20}}>Welcome {this.state.user.name}</Text>
-          <Text>Your email is: {this.state.user.email}</Text>
-
-          <TouchableOpacity onPress={() => {this._signOut(); }}>
-            <View style={{marginTop: 50}}>
-              <Text>Log out</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
+          <App user={this.state.user}/>
       );
     }
 
