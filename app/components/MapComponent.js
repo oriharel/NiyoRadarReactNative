@@ -41,7 +41,7 @@ export default class MapComponent extends React.Component{
             latitude: region.latitude,
             title: 'You Are Here',
             view: <View style={styles.container}>
-                    <FriendPin friendImage={this.props.route.user.photo}/>
+                    <FriendPin friendImage={this.props.user.photo}/>
                   </View>
         }];
     }
