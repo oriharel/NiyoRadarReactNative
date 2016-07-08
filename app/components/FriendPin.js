@@ -8,7 +8,7 @@ import {
     StyleSheet
 } from 'react-native';
 
-export default class FriendPin extends React.Component{
+export default class FriendPin extends Component{
 
     constructor(){
         super();

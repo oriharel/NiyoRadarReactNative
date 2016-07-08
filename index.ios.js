@@ -10,19 +10,39 @@ import {
   StyleSheet,
   Text,
   View,
+  AsyncStorage,
   TouchableOpacity
 } from 'react-native';
 
 import App from "./app/app";
 import {GoogleSignin, GoogleSigninButton} from 'react-native-google-signin';
+var STORAGE_KEY = '@NIYORadar:friends';
 
 class NiyoRadar extends Component {
 
   constructor(props) {
+    console.log('constructor started');
     super(props);
     this.state = {
       user: null
     };
+
+    let ori = {
+      name: 'Ori Harel',
+      email: 'ori.harel@gmail.com',
+      photo: 'https://lh4.googleusercontent.com/-xGtdWuo4hi0/AAAAAAAAAAI/AAAAAAABCaw/WbaMsAoa8yI/photo.jpg'
+    };
+
+    let yifat = {
+      name: 'Yifat Ferber-Harel',
+      email: 'yifat.ferber@gmail.com',
+      photo: 'https://lh4.googleusercontent.com/-xGtdWuo4hi0/AAAAAAAAAAI/AAAAAAABCaw/WbaMsAoa8yI/photo.jpg'
+    };
+
+    let users = [ori, yifat];
+
+    console.log('setting '+JSON.stringify(users));
+    AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(users));
   }
 
   componentDidMount() {
@@ -39,7 +59,6 @@ class NiyoRadar extends Component {
 
       console.log('figuring out current user...');
       GoogleSignin.currentUserAsync().then((user) => {
-        console.log('USER', user);
         this.setState({user: user});
       }).done();
 

@@ -9,7 +9,7 @@ import {
 
 import FriendPin from './FriendPin';
 
-export default class MapComponent extends React.Component{
+export default class MapComponent extends Component{
 
     constructor(){
         super();
