@@ -8,15 +8,15 @@ import React, { Component } from 'react';
 import {
   AppRegistry,
   StyleSheet,
-  Text,
-  View,
-  AsyncStorage,
-  TouchableOpacity
+  Navigator,
+  AsyncStorage
 } from 'react-native';
 
 import App from "./app/app";
+import Login from "./app/containers/Login";
+
 import {GoogleSignin, GoogleSigninButton} from 'react-native-google-signin';
-var STORAGE_KEY = '@NIYORadar:friends';
+import {STORAGE_KEY, LOGGED_IN_USER_KEY} from "./app/constants";
 
 class NiyoRadar extends Component {
 
@@ -45,63 +45,21 @@ class NiyoRadar extends Component {
     AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(users));
   }
 
-  componentDidMount() {
-    console.log('componentDidMount started...');
-    GoogleSignin.hasPlayServices({ autoResolve: true }).then(() => {
-
-      console.log('configuring GoogleSignin...');
-      GoogleSignin.configure({
-        scopes: ["https://www.googleapis.com/auth/drive.readonly"],
-        iosClientId: '586622831086-dte1gna5enr7dcfj0g4lkf6feh6h591t.apps.googleusercontent.com',
-        webClientId: '586622831086-uhmb85chi2i8jvnbqpqpnm80jqchelm0.apps.googleusercontent.com',
-        offlineAccess: false
-      });
-
-      console.log('figuring out current user...');
-      GoogleSignin.currentUserAsync().then((user) => {
-        this.setState({user: user});
-      }).done();
-
-    })
-    .catch((err) => {
-      console.log("Play services error", err.code, err.message);
-    })
-  }
-
-
-
   render() {
-    if (!this.state.user) {
-      return (
-        <View style={styles.container}>
-          <GoogleSigninButton style={{width: 212, height: 48}} size={GoogleSigninButton.Size.Standard} color={GoogleSigninButton.Color.Light} onPress={this._signIn.bind(this)}/>
-        </View>
-      );
-    }
-
-    if (this.state.user) {
-      return (
-          <App user={this.state.user}/>
-      );
-    }
-
+    return (
+        <Navigator
+            initialRoute={{id: 'first', user: this.state.user}}
+            renderScene={this.navigatorRenderScene}/>
+    );
   }
 
-  _signIn() {
-    console.log('_signIn started...');
-    try {
-      GoogleSignin.signIn()
-          .then((user) => {
-            console.log(user);
-            this.setState({user: user});
-          })
-          .catch((err) => {
-            console.log('WRONG SIGNIN', err);
-          })
-          .done();
+  navigatorRenderScene(route, navigator) {
+
+    if (!route.user) {
+      return (<Login navigator={navigator}/>);
     }
-    catch (ex) {
-      console.error('Error trying to GoogleSignin.signIn() '+ex);
+    else {
+      return (<App navigator={navigator} title="Map" user={route.user}/>);
     }
 
   }
