@@ -10,8 +10,6 @@
 #import "AppDelegate.h"
 
 #import "RCTRootView.h"
-#import "RNGoogleSignin.h"
-
 
 @implementation AppDelegate
 
@@ -58,13 +56,5 @@
   [self.window makeKeyAndVisible];
   return YES;
 }
-
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
-  sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
-  
-  return [RNGoogleSignin application:application openURL:url sourceApplication:sourceApplication annotation:annotation];
-}
-
-
 
 @end

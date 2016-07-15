@@ -17,7 +17,7 @@ var STORAGE_KEY = '@NIYORadar:friends';
 
 
 
-export default class MainView extends Component {
+export default class AppIOS extends Component {
 
     constructor(){
         super();
@@ -44,15 +44,6 @@ export default class MainView extends Component {
         } catch (error) {
             console.error('ERROR in _loadInitialState: '+error);
         }
-    }
-
-
-    _renderContent(color: string, pageText: string, num: number) {
-        return (
-            <View style={[styles.tabContent, {backgroundColor: color}]}>
-                <Text style={styles.tabText}>{pageText}</Text>
-                <Text style={styles.tabText}>{num} re-renders of the {pageText}</Text>
-            </View>);
     }
 
     render() {

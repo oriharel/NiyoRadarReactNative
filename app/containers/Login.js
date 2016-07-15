@@ -21,14 +21,21 @@ export default class Login extends Component{
             GoogleSignin.configure({
                 scopes: ["https://www.googleapis.com/auth/drive.readonly"],
                 iosClientId: '586622831086-dte1gna5enr7dcfj0g4lkf6feh6h591t.apps.googleusercontent.com',
-                webClientId: '586622831086-uhmb85chi2i8jvnbqpqpnm80jqchelm0.apps.googleusercontent.com',
+                webClientId: '278933542632-6q56ev6qkd6160kag7s60qj2k9onjnd2.apps.googleusercontent.com',
                 offlineAccess: false
             });
 
             console.log('figuring out current user...');
             GoogleSignin.currentUserAsync().then((user) => {
                 // AsyncStorage.setItem(LOGGED_IN_USER_KEY, user);
-                this.props.navigator.push({id: 'second', user: user})
+                if (user){
+                    console.log('user already logged in!');
+                    this.props.navigator.push({id: 'second', user: user});
+                }
+                else {
+                    console.log('No user ever logged in...');
+                }
+
             }).done();
 
         })
@@ -41,7 +48,7 @@ export default class Login extends Component{
         return (
             <View style={styles.container}>
                 <GoogleSigninButton style={{width: 212, height: 48}}
-                                    size={GoogleSigninButton.Size.Standard}
+                                    size={GoogleSigninButton.Size.Icon}
                                     color={GoogleSigninButton.Color.Light}
                                     onPress={this._signIn.bind(this)}
                 />
@@ -54,8 +61,9 @@ export default class Login extends Component{
         try {
             GoogleSignin.signIn()
                 .then((user) => {
-                    console.log(user);
+                    console.log('user successfully logged in '+user.name);
                     this.setState({user: user});
+                    this.props.navigator.push({id: 'second', user: user});
                 })
                 .catch((err) => {
                     console.log('WRONG SIGNIN', err);

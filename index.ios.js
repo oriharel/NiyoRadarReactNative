@@ -12,7 +12,7 @@ import {
   AsyncStorage
 } from 'react-native';
 
-import App from "./app/app";
+import AppIOS from "./app/appIOS";
 import Login from "./app/containers/Login";
 
 import {GoogleSignin, GoogleSigninButton} from 'react-native-google-signin';
@@ -59,7 +59,7 @@ class NiyoRadar extends Component {
       return (<Login navigator={navigator}/>);
     }
     else {
-      return (<App navigator={navigator} title="Map" user={route.user}/>);
+      return (<AppIOS navigator={navigator} title="Map" user={route.user}/>);
     }
 
   }

@@ -2,10 +2,11 @@ import React, {Component} from 'react';
 import {
     Text,
     View,
-    MapView,
     Image,
     StyleSheet
 } from 'react-native';
+
+import MapView from 'react-native-maps';
 
 import FriendPin from './FriendPin';
 
@@ -24,14 +25,16 @@ export default class MapComponent extends Component{
 
     render() {
         return (
-            <MapView
-                style={styles.container}
-                onRegionChange={this._onRegionChange.bind(this)}
-                onRegionChangeComplete={this._onRegionChangeComplete.bind(this)}
-                region={this.state.mapRegion}
-                annotations={this.state.annotations}
-                showsUserLocation={true}
-            />
+            <View style={styles.container}>
+                <MapView
+                    style={styles.map}
+                    onRegionChange={this._onRegionChange.bind(this)}
+                    onRegionChangeComplete={this._onRegionChangeComplete.bind(this)}
+                    region={this.state.mapRegion}
+                    annotations={this.state.annotations}
+                    showsUserLocation={true}
+                />
+            </View>
         );
     }
 
@@ -65,7 +68,20 @@ export default class MapComponent extends Component{
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        justifyContent: 'flex-end',
+        alignItems: 'center'
+    },
+    map: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
     },
     welcome: {
         fontSize: 30,

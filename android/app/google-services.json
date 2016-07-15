@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "278933542632",
+    "project_id": "niyoradarrn"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:278933542632:android:15462c84a92140eb",
+        "android_client_info": {
+          "package_name": "com.niyoradar"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "278933542632-rl97n9h8ihofatlah6lr0k776kogv2r9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.niyoradar",
+            "certificate_hash": "9DAC6FE006BE7543F616A6D6877E49397AD7DB36"
+          }
+        },
+        {
+          "client_id": "278933542632-6q56ev6qkd6160kag7s60qj2k9onjnd2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDFuRfRDSHZLcr3BjA7rjcuV0YnyXrm3A"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

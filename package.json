@@ -6,8 +6,9 @@
     "start": "node node_modules/react-native/local-cli/cli.js start"
   },
   "dependencies": {
-    "react": "15.1.0",
-    "react-native": "^0.28.0",
-    "react-native-google-signin": "^0.6.1"
+    "react": "^15.2.1",
+    "react-native": "^0.29.1",
+    "react-native-google-signin": "^0.6.1",
+    "react-native-maps": "^0.7.1"
   }
 }
