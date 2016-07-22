@@ -27,7 +27,6 @@ export default class Login extends Component{
 
             console.log('figuring out current user...');
             GoogleSignin.currentUserAsync().then((user) => {
-                // AsyncStorage.setItem(LOGGED_IN_USER_KEY, user);
                 if (user){
                     console.log('user already logged in!');
                     this.props.navigator.push({id: 'second', user: user});
@@ -62,6 +61,7 @@ export default class Login extends Component{
             GoogleSignin.signIn()
                 .then((user) => {
                     console.log('user successfully logged in '+user.name);
+                    AsyncStorage.setItem(LOGGED_IN_USER_KEY, JSON.stringify(user));
                     this.setState({user: user});
                     this.props.navigator.push({id: 'second', user: user});
                 })

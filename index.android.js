@@ -24,7 +24,7 @@ class NiyoRadar extends Component {
         console.log('constructor started');
         super(props);
         this.state = {
-            user: null
+            user: AsyncStorage.getItem(LOGGED_IN_USER_KEY)
         };
 
         let ori = {
@@ -59,7 +59,10 @@ class NiyoRadar extends Component {
             return (<Login navigator={navigator}/>);
         }
         else {
-            return (<AppAndroid navigator={navigator} title="Map" user={route.user}/>);
+            if (route.id === 'first') {
+                return (<Login navigator={navigator}/>);
+            }
+            return (<AppAndroid navigator={navigator} title="NIYO Radar" user={route.user}/>);
         }
 
     }

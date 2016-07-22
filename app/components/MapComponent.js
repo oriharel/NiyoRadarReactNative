@@ -68,29 +68,9 @@ export default class MapComponent extends Component{
 
 const styles = StyleSheet.create({
     container: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        justifyContent: 'flex-end',
-        alignItems: 'center'
+        flex: 1
     },
     map: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-    },
-    welcome: {
-        fontSize: 30,
-        textAlign: 'center',
-        margin: 10,
-    },
-    instructions: {
-        textAlign: 'center',
-        color: '#333333',
-        marginBottom: 5,
-    },
+        flex: 1
+    }
 });
