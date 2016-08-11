@@ -20,6 +20,7 @@ export default class FriendsList extends Component{
     }
 
     componentDidMount() {
+        console.log('[FriendsList] componentDidMount no of friends: '+ this.props.friends.length);
         this.setState({
             friendsSource: this.state.friendsSource.cloneWithRows(this.props.friends)
         })

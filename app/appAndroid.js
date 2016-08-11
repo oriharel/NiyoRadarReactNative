@@ -4,6 +4,7 @@ import {
     Text,
     View,
     ToolbarAndroid,
+    AsyncStorage,
     TouchableHighlight
 } from 'react-native';
 
@@ -14,15 +15,16 @@ var STORAGE_KEY = '@NIYORadar:friends';
 
 export default class AppAndroid extends Component {
 
+    constructor(){
+        super();
+    }
+
+
+
 
     render() {
         return (
             <View style={styles.container}>
-                <ToolbarAndroid style={styles.toolbar}
-                                title={this.props.title}
-                                navIcon={require('./images/ic_menu_black_24dp.png')}
-                                actions={toolbarActions}
-                                titleColor={'#000000'}/>
                 <MapComponent style={styles.map} user={this.props.user}/>
             </View>
         );
@@ -30,9 +32,9 @@ export default class AppAndroid extends Component {
     }
 
     _onActionSelected(position) {
-        this.setState({
-            actionText: 'Selected ' + toolbarActions[position].title,
-        });
+        if (position === 0) {
+            this.props.navigator.push({id: 'friends', user: this.props.user});
+        }
     }
 
 
@@ -43,16 +45,12 @@ var styles = StyleSheet.create({
     container: {
         flex: 1
     },
-    toolbar: {
-        backgroundColor: '#bae572',
-        height: 56,
-    },
     map: {
         flex: 1
     }
 });
 
 var toolbarActions = [
-    {title: 'Create', icon: require('./images/ic_menu_allfriends.png'), show: 'always'},
+    {title: 'Friends', icon: require('./images/ic_menu_allfriends.png'), show: 'always'},
     {title: 'Settings'},
 ];

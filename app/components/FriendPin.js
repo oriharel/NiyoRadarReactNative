@@ -10,18 +10,14 @@ import {
 
 export default class FriendPin extends Component{
 
-    constructor(){
-        super();
-        this.state = {
-        };
-    }
 
     render() {
+        console.log('[FriendPin] render started');
         return (
             <View style={styles.container}>
                 <Image
                     style={styles.wrapperImage}
-                    source={require('../resources/friend_placard.png')}
+                    source={require('../images/friend_placard.png')}
                 />
                 <Image
                     style={styles.friendImage}
@@ -35,9 +31,12 @@ export default class FriendPin extends Component{
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
+        flexDirection: 'column',
+        alignSelf: 'flex-start',
     },
     wrapperImage: {
+        flex: 1,
         height: 35,
         resizeMode: 'contain'
     },

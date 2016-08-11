@@ -64,8 +64,8 @@ export default class AppIOS extends Component {
                     <MapComponent user={this.props.user}/>
                 </TabBarIOS.Item>
                 <TabBarIOS.Item
-                    icon={require('./resources/ic_menu_allfriends.png')}
-                    selectedIcon={require('./resources/ic_menu_allfriends.png')}
+                    icon={require('./images/ic_menu_allfriends.png')}
+                    selectedIcon={require('./images/ic_menu_allfriends.png')}
                     renderAsOriginal
                     title="Friends"
                     selected={this.state.selectedTab === 'friendsTab'}
