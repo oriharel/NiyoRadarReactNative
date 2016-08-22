@@ -12,7 +12,6 @@ export default class FriendPin extends Component{
 
 
     render() {
-        console.log('[FriendPin] render started');
         return (
             <View style={styles.container}>
                 <Image

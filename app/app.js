@@ -15,43 +15,22 @@ import {
 } from 'react-native';
 
 import MapComponent from "./components/MapComponent";
-import {STORAGE_KEY} from "./constants";
+import ComManager from './comManager';
+import Login from './containers/Login';
+import {LOGGED_IN_USER_KEY} from "./constants";
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 
 export default class App extends Component {
 
-    componentDidMount() {
-        let friends = [
-            {
-                name: "Yifat Ferber - Harel",
-                email: "yifat.ferber@gmail.com",
-                location: {
-                    latitude: 32.185377,
-                    longitude: 34.890064
-                },
-                lastUpdate: 1112323123
-            },
-            {
-                name: "Itamar Harel",
-                email: "itamary.harel@gmail.com",
-                location: {
-                    latitude: 32.179184,
-                    longitude: 34.893190
-                },
-                lastUpdate: 1112323123
-            },
-            {
-                name: "Noa Harel",
-                email: "noa.harel11@gmail.com",
-                location: {
-                    latitude: 32.183001,
-                    longitude: 34.901410
-                },
-                lastUpdate: 1112323123
-            }
-        ];
+    constructor(props) {
+        super(props);
+        ComManager.init();
+    }
 
-        AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(friends));
+    async componentDidMount() {
+        var loggedInUser = await AsyncStorage.getItem(LOGGED_IN_USER_KEY);
+        if (loggedInUser) this.setState({loggedInUser: loggedInUser});
     }
 
 
@@ -68,9 +47,7 @@ export default class App extends Component {
                         routeMapper={{
                             LeftButton: (route, navigator, index, navState) =>
                             {
-                                if (route.id === 'map') {
-                                    return null;
-                                } else {
+                                if (route.id !== 'map') {
                                     return (
                                         <TouchableHighlight onPress={() => navigator.pop()}>
                                             <Text>Back</Text>
@@ -80,16 +57,31 @@ export default class App extends Component {
                             },
                             RightButton: (route, navigator, index, navState) =>
                             {
-                                if (route.id === 'map') {
+                                if (this.state && this.state.loggedInUser) {
                                     return (
-                                        <TouchableHighlight onPress={() => navigator.push({id: 'friends'})}>
-                                            <Text>Friends</Text>
+                                        <TouchableHighlight style={styles.loginButton} onPress={() => navigator.push({id: 'friends'})}>
+                                            <Icon size={25} name="users" color="#000000" />
+                                        </TouchableHighlight>
+                                    );
+                                }
+                                else {
+                                    return (
+                                        <TouchableHighlight style={styles.loginButton} onPress={() => navigator.push({id: 'login'})}>
+                                            <Icon size={25} name="user" color="#000000" />
                                         </TouchableHighlight>
                                     );
                                 }
                             },
                             Title: (route, navigator, index, navState) =>
-                            { return (<Text>Map</Text>); },
+                            {
+                                if (route.id === 'map'){
+                                    return (<Text style={styles.title}>Map</Text>);
+                                }
+                                else if (route.id === 'login'){
+                                    return (<Text style={styles.title}>Login</Text>);
+                                }
+
+                            },
                         }}
                         style={styles.toolbar}
                     />
@@ -106,6 +98,9 @@ export default class App extends Component {
         else if (route.id === 'friends'){
             return (<FriendsList navigator={navigator}/>);
         }
+        else if (route.id === 'login'){
+            return (<Login navigator={navigator}/>);
+        }
 
     }
 
@@ -120,5 +115,12 @@ const styles = StyleSheet.create({
     },
     toolbar: {
         backgroundColor: '#bae572'
+    },
+    loginButton: {
+        marginRight: 20,
+        marginTop: 5
+    },
+    title: {
+        marginTop: 10
     }
 });

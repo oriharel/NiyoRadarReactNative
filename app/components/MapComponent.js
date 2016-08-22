@@ -10,7 +10,7 @@ import MapView from 'react-native-maps';
 import FriendPin from './FriendPin';
 import locationUpdater from '../locationUpdater';
 
-import {STORAGE_KEY, LOGGED_IN_USER_KEY} from "../constants";
+import {FRIENDS_KEY, LOGGED_IN_USER_KEY} from "../constants";
 
 export default class MapComponent extends Component{
 
@@ -37,7 +37,7 @@ export default class MapComponent extends Component{
                 this.setState({user: JSON.parse(user)});
             }
 
-            let friends = await AsyncStorage.getItem(STORAGE_KEY) || "[]";
+            let friends = await AsyncStorage.getItem(FRIENDS_KEY) || "[]";
             var friendsObj = JSON.parse(friends);
             console.log('You have '+friendsObj.length+' friends');
 
