@@ -1,7 +1,7 @@
 package com.niyoradar;
 
-
 import com.facebook.react.ReactActivity;
+import co.apptailor.googlesignin.RNGoogleSigninPackage;
 
 public class MainActivity extends ReactActivity {
 
@@ -12,14 +12,5 @@ public class MainActivity extends ReactActivity {
     @Override
     protected String getMainComponentName() {
         return "NiyoRadar";
-    }
-
-    /**
-     * Returns whether dev mode should be enabled.
-     * This enables e.g. the dev menu.
-     */
-    @Override
-    protected boolean getUseDeveloperSupport() {
-        return BuildConfig.DEBUG;
     }
 }

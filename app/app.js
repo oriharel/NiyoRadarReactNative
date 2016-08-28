@@ -99,7 +99,7 @@ export default class App extends Component {
             return (<FriendsList navigator={navigator}/>);
         }
         else if (route.id === 'login'){
-            return (<Login navigator={navigator}/>);
+            return (<Settings navigator={navigator}/>);
         }
 
     }

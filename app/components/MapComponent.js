@@ -9,52 +9,20 @@ import MapView from 'react-native-maps';
 
 import FriendPin from './FriendPin';
 import locationUpdater from '../locationUpdater';
+import Store from '../store';
+import {observer} from "mobx-react/native";
 
 import {FRIENDS_KEY, LOGGED_IN_USER_KEY} from "../constants";
 
+@observer
 export default class MapComponent extends Component{
 
     constructor(){
         super();
-        this.state = {
-            user: {},
-            friends: []
-        };
     }
 
     componentDidMount() {
-        this.setState({isFirstLoad: true});
-        this._loadInitialState().done();
-    }
-
-    async _loadInitialState() {
-        console.log('_loadInitialState started');
-        try {
-
-            var user = await AsyncStorage.getItem(LOGGED_IN_USER_KEY);
-            console.log('user is: '+user);
-            if (user) {
-                this.setState({user: JSON.parse(user)});
-            }
-
-            let friends = await AsyncStorage.getItem(FRIENDS_KEY) || "[]";
-            var friendsObj = JSON.parse(friends);
-            console.log('You have '+friendsObj.length+' friends');
-
-            this.setState({friends: JSON.parse(friends)});
-
-            this.updateFriends();
-
-
-        } catch (error) {
-            console.error('ERROR in _loadInitialState: '+error);
-        }
-    }
-
-    updateFriends() {
-        locationUpdater.update(this.state.friends, (updatedFriends)=>{
-            this.setState(updatedFriends);
-        })
+        Store.setFirstLoad(true);
     }
 
     render() {
@@ -79,11 +47,11 @@ export default class MapComponent extends Component{
                         description='You Are Here desc'
                     >
                         <View style={styles.container}>
-                            <FriendPin friendImage={this.state.user.photo}/>
+                            <FriendPin friendImage={Store.loggedInUser.photo}/>
                         </View>
                     </MapView.Marker>
 
-                    {this.state.friends.map(friend => (
+                    {Store.friends.map(friend => (
                         <MapView.Marker
                             coordinate={friend.location}
                             title={friend.name}
@@ -102,17 +70,13 @@ export default class MapComponent extends Component{
     }
 
     _onRegionChange(region) {
-        this.setState({
-            mapRegionInput: region
-        });
+        Store.setMapRegionInput(region);
     }
 
     _onRegionChangeComplete(region) {
-        if (this.state.isFirstLoad) {
-            this.setState({
-                mapRegionInput: region,
-                isFirstLoad: false
-            });
+        if (Store.isFirstLoad) {
+            Store.setMapRegionInput(region);
+            Store.setFirstLoad(false);
         }
     }
 };

@@ -9,27 +9,62 @@ import {
     AsyncStorage
 } from 'react-native';
 
+const MK = require('react-native-material-kit');
+const {
+    MKButton,
+    MKColor,
+} = MK;
+
+import Store from '../store';
+import {observer} from "mobx-react/native";
+
 import {LOGGED_IN_USER_KEY} from "../constants";
 import {GoogleSignin, GoogleSigninButton} from 'react-native-google-signin';
 
-export default class Login extends Component{
+const ColoredRaisedButton = MKButton.coloredButton()
+    .withText('Sign Out')
+    .withOnPress(() => {
+        GoogleSignin.revokeAccess().then(() => GoogleSignin.signOut()).then(async () => {
+            await AsyncStorage.removeItem(LOGGED_IN_USER_KEY);
+            Store.setLoggedInUser({});
+        })
+            .done();
+    })
+    .build();
+
+@observer
+export default class Settings extends Component{
+
+    constructor(props) {
+        super(props);
+    }
 
     componentDidMount() {
         this._setupGoogleSignin();
     }
 
     render() {
+        console.log('render settings with user: '+JSON.stringify(Store.loggedInUser));
         return (
             <View style={styles.container}>
-                <GoogleSigninButton style={{width: 212, height: 48}}
-                                    size={GoogleSigninButton.Size.Standard}
-                                    color={GoogleSigninButton.Color.Light}
-                                    onPress={this._signIn.bind(this)}/>
+                {(() => {
+                    if (Store.loggedInUser.name) {
+                        return <ColoredRaisedButton/>
+                    }
+                    else {
+                        return <GoogleSigninButton style={{width: 212, height: 48}}
+                                            size={GoogleSigninButton.Size.Standard}
+                                            color={GoogleSigninButton.Color.Light}
+                                            onPress={this._signIn.bind(this)}/>
+                    }
+
+                })()}
             </View>
         );
     }
 
     async _setupGoogleSignin() {
+        console.log('_setupGoogleSignin started');
         try {
             await GoogleSignin.hasPlayServices({ autoResolve: true });
             await GoogleSignin.configure({
@@ -41,7 +76,7 @@ export default class Login extends Component{
 
             const user = await GoogleSignin.currentUserAsync();
             console.log(user);
-            this.setState({user});
+            Store.setLoggedInUser(user);
         }
         catch(err) {
             console.log("Google signin error", err.code, err.message);
@@ -52,20 +87,12 @@ export default class Login extends Component{
         GoogleSignin.signIn()
             .then(async (user) => {
                 console.log(user);
-                this.setState({user: user});
+                Store.setLoggedInUser(user);
                 await AsyncStorage.setItem(LOGGED_IN_USER_KEY, JSON.stringify(user));
-                this.props.navigator.pop();
             })
             .catch((err) => {
                 console.log('WRONG SIGNIN', err);
             })
-            .done();
-    }
-
-    _signOut() {
-        GoogleSignin.revokeAccess().then(() => GoogleSignin.signOut()).then(() => {
-            this.setState({user: null});
-        })
             .done();
     }
 
