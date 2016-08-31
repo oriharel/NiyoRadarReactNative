@@ -14,6 +14,7 @@ import {
 
 import MapComponent from "./components/MapComponent";
 import ComManager from './comManager';
+import LocationUpdater from './locationUpdater';
 import Settings from './containers/Settings';
 import FriendsList from './components/FriendsList';
 import {LOGGED_IN_USER_KEY} from "./constants";
@@ -27,12 +28,13 @@ export default class App extends Component {
     constructor(props) {
         super(props);
         ComManager.init();
+        LocationUpdater.update();
     }
 
     async componentDidMount() {
         var loggedInUser = await AsyncStorage.getItem(LOGGED_IN_USER_KEY);
         if (loggedInUser) {
-            console.log('found logged in user '+loggedInUser);
+            // console.log('found logged in user '+loggedInUser);
             Store.setLoggedInUser(JSON.parse(loggedInUser));
         }
         else {

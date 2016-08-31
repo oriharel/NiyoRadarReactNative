@@ -12,6 +12,7 @@ class Store {
     @observable selectedTab = 'map';
     @observable isFirstLoad = true;
     @observable mapRegionInput = {};
+    @observable userLocation = {latitude: 32.187830, longitude: 34.896698};
 
     constructor() {
 
@@ -40,6 +41,11 @@ class Store {
     @action
     setFriends(friends) {
         this.friends = friends;
+    }
+
+    @action
+    setLocation(location) {
+        this.userLocation = location;
     }
 }
 

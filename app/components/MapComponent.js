@@ -18,8 +18,18 @@ export default class MapComponent extends Component{
         super();
     }
 
+    watchID: ?number = null;
+
     componentDidMount() {
         Store.setFirstLoad(true);
+        this.watchID = navigator.geolocation.watchPosition((position) => {
+            Store.setLocation({latitude: position.coords.latitude,
+                longitude: position.coords.longitude});
+        });
+    }
+
+    componentWillUnmount() {
+        navigator.geolocation.clearWatch(this.watchID);
     }
 
     render() {
@@ -30,24 +40,35 @@ export default class MapComponent extends Component{
                     style={styles.map}
                     onRegionChange={this._onRegionChange.bind(this)}
                     onRegionChangeComplete={this._onRegionChangeComplete.bind(this)}
+                    region={{
+                        latitude: Store.userLocation.latitude,
+                        longitude: Store.userLocation.longitude,
+                        latitudeDelta: 0.0922,
+                        longitudeDelta: 0.0421,
+                    }}
                     initialRegion={{
-                        latitude: 32.187824,
-                        longitude: 34.896701,
+                        latitude: Store.userLocation.latitude,
+                        longitude: Store.userLocation.longitude,
                         latitudeDelta: 0.0922,
                         longitudeDelta: 0.0421,
                     }}
                     showsUserLocation={true}
                 >
+                    {(() => {
+                        if (Store.userLocation.latitude) {
+                            return <MapView.Marker
+                                coordinate={{latitude: Store.userLocation.latitude,
+                                    longitude: Store.userLocation.longitude}}
+                                title='You Are Here'
+                                description='You Are Here desc'
+                            >
+                                <View style={styles.container}>
+                                    <FriendPin friendImage={Store.loggedInUser.photo}/>
+                                </View>
+                            </MapView.Marker>
+                        }
 
-                    <MapView.Marker
-                        coordinate={{latitude: 32.182586, longitude: 34.895063}}
-                        title='You Are Here'
-                        description='You Are Here desc'
-                    >
-                        <View style={styles.container}>
-                            <FriendPin friendImage={Store.loggedInUser.photo}/>
-                        </View>
-                    </MapView.Marker>
+                    })()}
 
                     {Store.friends.map(friend => (
                         <MapView.Marker
