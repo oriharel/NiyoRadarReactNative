@@ -2,7 +2,7 @@ import './UserAgent';
 import io from 'socket.io-client/socket.io';
 import logger from './Logger';
 import {LOGGED_IN_USER_KEY, FRIENDS_KEY} from "./constants";
-import EventEmitter from 'EventEmitter';
+import Dispatcher from './Dispatcher';
 
 var socket;
 
@@ -40,8 +40,8 @@ function init() {
 
     socket.on('locationUpdate', async (users) => {
         logger.debug('locationUpdate received with '+users.length+' friends');
-        await AsyncStorage.setItem(FRIENDS_KEY, users);
-        EventEmitter.emit('locationsUpdated');
+        await AsyncStorage.setItem(FRIENDS_KEY, JSON.stringify(users));
+        Dispatcher.emit('locationsUpdated');
 
     });
 
@@ -72,5 +72,6 @@ function init() {
 }
 
 export default {
-    init
+    init,
+    sendGetFriendsReq
 }

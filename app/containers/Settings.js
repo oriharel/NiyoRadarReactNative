@@ -77,6 +77,7 @@ export default class Settings extends Component{
             const user = await GoogleSignin.currentUserAsync();
             console.log(user);
             Store.setLoggedInUser(user);
+            await AsyncStorage.setItem(LOGGED_IN_USER_KEY, JSON.stringify(user));
         }
         catch(err) {
             console.log("Google signin error", err.code, err.message);

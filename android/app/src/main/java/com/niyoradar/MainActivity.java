@@ -1,6 +1,9 @@
 package com.niyoradar;
 
 import com.facebook.react.ReactActivity;
+import com.oblador.vectoricons.VectorIconsPackage;
+import com.github.xinthink.rnmk.ReactMaterialKitPackage;
+import com.airbnb.android.react.maps.MapsPackage;
 import co.apptailor.googlesignin.RNGoogleSigninPackage;
 
 public class MainActivity extends ReactActivity {

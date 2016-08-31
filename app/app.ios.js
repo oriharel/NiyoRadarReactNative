@@ -58,7 +58,7 @@ export default class App extends Component {
                     <MapComponent/>
                 </Icon.TabBarItemIOS>
                 {(() => {
-                    if (this.state.loggedInUser) {
+                    if (Store.loggedInUser) {
                         return <Icon.TabBarItemIOS
                             title='Friends'
                             selected={Store.selectedTab === 'friends'}

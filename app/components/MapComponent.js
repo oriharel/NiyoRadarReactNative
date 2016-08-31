@@ -8,11 +8,8 @@ import {
 import MapView from 'react-native-maps';
 
 import FriendPin from './FriendPin';
-import locationUpdater from '../locationUpdater';
 import Store from '../store';
 import {observer} from "mobx-react/native";
-
-import {FRIENDS_KEY, LOGGED_IN_USER_KEY} from "../constants";
 
 @observer
 export default class MapComponent extends Component{
@@ -26,6 +23,7 @@ export default class MapComponent extends Component{
     }
 
     render() {
+        console.log('rendering map with '+Store.friends.length+' friends');
         return (
             <View style={styles.container}>
                 <MapView

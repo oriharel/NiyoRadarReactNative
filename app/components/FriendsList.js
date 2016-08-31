@@ -8,6 +8,7 @@ import {
     ListView,
     StyleSheet
 } from 'react-native';
+import Store from '../store';
 
 export default class FriendsList extends Component{
 
@@ -20,9 +21,9 @@ export default class FriendsList extends Component{
     }
 
     componentDidMount() {
-        console.log('[FriendsList] componentDidMount no of friends: '+ this.props.friends.length);
+        console.log('[FriendsList] componentDidMount no of friends: '+ Store.friends.length);
         this.setState({
-            friendsSource: this.state.friendsSource.cloneWithRows(this.props.friends)
+            friendsSource: this.state.friendsSource.cloneWithRows(Store.friends)
         })
     }
 

@@ -1,4 +1,9 @@
 import {observable, action} from "mobx";
+import {
+    AsyncStorage
+} from 'react-native';
+import Dispatcher from './Dispatcher';
+import {FRIENDS_KEY} from "./constants";
 
 
 class Store {
@@ -31,5 +36,17 @@ class Store {
     setMapRegionInput(region) {
         this.mapRegionInput = region;
     }
+
+    @action
+    setFriends(friends) {
+        this.friends = friends;
+    }
 }
-export default Store;
+
+const store = new Store();
+Dispatcher.on('locationsUpdated', async ()=>{
+    console.log('store received locationsUpdated');
+    let friends = await AsyncStorage.getItem(FRIENDS_KEY);
+    store.setFriends(JSON.parse(friends));
+});
+export default store;
