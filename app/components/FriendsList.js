@@ -9,7 +9,9 @@ import {
     StyleSheet
 } from 'react-native';
 import Store from '../store';
+import {observer} from "mobx-react/native";
 
+@observer
 export default class FriendsList extends Component{
 
     constructor(){
@@ -22,8 +24,9 @@ export default class FriendsList extends Component{
 
     componentDidMount() {
         console.log('[FriendsList] componentDidMount no of friends: '+ Store.friends.length);
+        const items = Store.friends.slice();
         this.setState({
-            friendsSource: this.state.friendsSource.cloneWithRows(Store.friends)
+            friendsSource: this.state.friendsSource.cloneWithRows(items)
         })
     }
 
@@ -49,6 +52,9 @@ export default class FriendsList extends Component{
                     <View>
                         <Text style={styles.text}>
                             {rowData.name}
+                        </Text>
+                        <Text style={styles.text}>
+                            {rowData.email}
                         </Text>
                     </View>
                 </View>

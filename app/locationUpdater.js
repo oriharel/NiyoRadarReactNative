@@ -7,7 +7,7 @@ export function update() {
             console.log('received current position '+JSON.stringify(position));
             Store.setLocation({latitude: position.coords.latitude, longitude: position.coords.longitude});
         },
-        (error) => alert(error.message),
+        (error) => console.log('Error from geolocation.getCurrentPosition '+error.message),
         {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
     );
 

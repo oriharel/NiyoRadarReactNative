@@ -23,6 +23,7 @@ export default class MapComponent extends Component{
     componentDidMount() {
         Store.setFirstLoad(true);
         this.watchID = navigator.geolocation.watchPosition((position) => {
+            console.log('received position change...');
             Store.setLocation({latitude: position.coords.latitude,
                 longitude: position.coords.longitude});
         });
