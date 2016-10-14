@@ -32,7 +32,7 @@ async function sendGetFriendsReq() {
 function init() {
     logger.debug('comManager init begins');
 
-    var url = 'http://localhost:5000';
+    var url = 'http://10.0.0.6:5000';
     // var url = 'http://localhost:5000';
 
     logger.debug('initializing socket connection to '+url+' process.platform: '+process.platform);

@@ -19,23 +19,26 @@ import Settings from './containers/Settings';
 import FriendsList from './components/FriendsList';
 import {LOGGED_IN_USER_KEY} from "./constants";
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Store from './store';
-import {observer} from "mobx-react/native";
 
-@observer
+
 export default class App extends Component {
 
     constructor(props) {
         super(props);
         ComManager.init();
         LocationUpdater.update();
+        this.state = {
+            loggedInUser: {},
+            selectedTab: 'map'
+        }
     }
 
     async componentDidMount() {
         var loggedInUser = await AsyncStorage.getItem(LOGGED_IN_USER_KEY);
         if (loggedInUser) {
-            // console.log('found logged in user '+loggedInUser);
-            Store.setLoggedInUser(JSON.parse(loggedInUser));
+            this.setState({
+                loggedInUser: JSON.parse(loggedInUser)
+            })
         }
         else {
             console.log('[app] no logged in user');
@@ -52,21 +55,25 @@ export default class App extends Component {
                 barTintColor="#bae572">
                 <Icon.TabBarItemIOS
                     title="Map"
-                    selected={Store.selectedTab === 'map'}
+                    selected={this.state.selectedTab === 'map'}
                     iconName='map'
                     onPress={() => {
-                        Store.setSelectedTab('map');
+                        this.setState({
+                            selectedTab : 'map'
+                        });
                     }}>
                     <MapComponent/>
                 </Icon.TabBarItemIOS>
                 {(() => {
-                    if (Store.loggedInUser) {
+                    if (this.state.loggedInUser) {
                         return <Icon.TabBarItemIOS
                             title='Friends'
-                            selected={Store.selectedTab === 'friends'}
+                            selected={this.state.selectedTab === 'friends'}
                             iconName='users'
                             onPress={() => {
-                                Store.setSelectedTab('friends');
+                                this.setState({
+                                    selectedTab : 'friends'
+                                });
                             }}>
                             <FriendsList/>
                         </Icon.TabBarItemIOS>
@@ -75,14 +82,16 @@ export default class App extends Component {
                 })()}
 
                 <Icon.TabBarItemIOS
-                    title={Store.loggedInUser ? 'Me' : 'Log In'}
+                    title={this.state.loggedInUser ? 'Me' : 'Log In'}
                     style={styles.hidden}
-                    selected={Store.selectedTab === 'settings'}
-                    iconName={Store.loggedInUser ? 'cog' : 'user'}
+                    selected={this.state.selectedTab === 'settings'}
+                    iconName={this.state.loggedInUser ? 'cog' : 'user'}
                     onPress={() => {
-                        Store.setSelectedTab('settings');
+                        this.setState({
+                            selectedTab : 'settings'
+                        });
                     }}>
-                    <Settings/>
+                    <Settings loggedInUser={this.state.loggedInUser}/>
                 </Icon.TabBarItemIOS>
             </TabBarIOS>
         );

@@ -6,12 +6,12 @@ import {
     Text,
     View,
     ListView,
-    StyleSheet
+    StyleSheet,
+    AsyncStorage
 } from 'react-native';
-import Store from '../store';
-import {observer} from "mobx-react/native";
+import Dispatcher from '../Dispatcher';
+import {FRIENDS_KEY} from "../constants";
 
-@observer
 export default class FriendsList extends Component{
 
     constructor(){
@@ -19,15 +19,27 @@ export default class FriendsList extends Component{
         super();
         this.state = {
             friendsSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
-        }
+        };
+
+        Dispatcher.on('locationsUpdated', async () => {
+            let friends = await AsyncStorage.getItem(FRIENDS_KEY);
+            this.setState({
+                friendsSource: this.state.friendsSource.cloneWithRows(JSON.parse(friends)),
+            })
+        })
     }
 
-    componentDidMount() {
-        console.log('[FriendsList] componentDidMount no of friends: '+ Store.friends.length);
-        const items = Store.friends.slice();
-        this.setState({
-            friendsSource: this.state.friendsSource.cloneWithRows(items)
-        })
+    async componentDidMount() {
+        let friends = await AsyncStorage.getItem(FRIENDS_KEY);
+        let numOfFriends = JSON.parse(friends) ? JSON.parse(friends).length : 0;
+        console.log('[FriendsList] componentDidMount no of friends: '+ numOfFriends);
+
+        if (numOfFriends > 0) {
+            this.setState({
+                friendsSource: this.state.friendsSource.cloneWithRows(JSON.parse(friends)),
+            })
+        }
+
     }
 
 

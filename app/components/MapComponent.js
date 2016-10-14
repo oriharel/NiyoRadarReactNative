@@ -6,26 +6,54 @@ import {
 } from 'react-native';
 
 import MapView from 'react-native-maps';
-
+import Dispatcher from '../Dispatcher';
 import FriendPin from './FriendPin';
-import Store from '../store';
-import {observer} from "mobx-react/native";
+import {FRIENDS_KEY} from "../constants";
 
-@observer
 export default class MapComponent extends Component{
 
     constructor(){
         super();
+        this.state = {
+            userLocation: {
+                latitude: 0,
+                longitude: 0
+            },
+            mapRegionInput:{
+                latitude: 0,
+                longitude: 0,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+            },
+            loggedInUser: {},
+            friends: []
+        };
+
+        Dispatcher.on('locationsUpdated', async () => {
+            let friends = await AsyncStorage.getItem(FRIENDS_KEY);
+            this.setState({
+                friends: JSON.parse(friends)
+            })
+        })
     }
 
     watchID: ?number = null;
 
     componentDidMount() {
-        Store.setFirstLoad(true);
+        this.setState({firstLoad: true});
         this.watchID = navigator.geolocation.watchPosition((position) => {
-            console.log('received position change...');
-            Store.setLocation({latitude: position.coords.latitude,
-                longitude: position.coords.longitude});
+            // console.log('received position change...');
+            this.setState({
+                userLocation: {
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude
+                },
+                mapRegionInput:{
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                    latitudeDelta: 0.0922,
+                    longitudeDelta: 0.0421,
+                }});
         });
     }
 
@@ -34,44 +62,39 @@ export default class MapComponent extends Component{
     }
 
     render() {
-        console.log('rendering map with '+Store.friends.length+' friends');
+        // console.log('rendering map with '+this.state.friends.length+' friends');
         return (
             <View style={styles.container}>
                 <MapView
                     style={styles.map}
                     onRegionChange={this._onRegionChange.bind(this)}
                     onRegionChangeComplete={this._onRegionChangeComplete.bind(this)}
-                    region={{
-                        latitude: Store.userLocation.latitude,
-                        longitude: Store.userLocation.longitude,
-                        latitudeDelta: 0.0922,
-                        longitudeDelta: 0.0421,
-                    }}
+                    region={this.state.mapRegionInput}
                     initialRegion={{
-                        latitude: Store.userLocation.latitude,
-                        longitude: Store.userLocation.longitude,
+                        latitude: this.state.userLocation.latitude,
+                        longitude: this.state.userLocation.longitude,
                         latitudeDelta: 0.0922,
                         longitudeDelta: 0.0421,
                     }}
                     showsUserLocation={true}
                 >
                     {(() => {
-                        if (Store.userLocation.latitude) {
+                        if (this.state.userLocation.latitude) {
                             return <MapView.Marker
-                                coordinate={{latitude: Store.userLocation.latitude,
-                                    longitude: Store.userLocation.longitude}}
+                                coordinate={{latitude: this.state.userLocation.latitude,
+                                    longitude: this.state.userLocation.longitude}}
                                 title='You Are Here'
                                 description='You Are Here desc'
                             >
                                 <View style={styles.container}>
-                                    <FriendPin friendImage={Store.loggedInUser.photo}/>
+                                    <FriendPin friendImage={this.state.loggedInUser.photo}/>
                                 </View>
                             </MapView.Marker>
                         }
 
                     })()}
 
-                    {Store.friends.map(friend => (
+                    {this.state.friends.map(friend => (
                         <MapView.Marker
                             coordinate={friend.location}
                             title={friend.name}
@@ -90,13 +113,13 @@ export default class MapComponent extends Component{
     }
 
     _onRegionChange(region) {
-        Store.setMapRegionInput(region);
+        this.setState({mapRegionInput: region});
     }
 
     _onRegionChangeComplete(region) {
-        if (Store.isFirstLoad) {
-            Store.setMapRegionInput(region);
-            Store.setFirstLoad(false);
+        if (this.state.isFirstLoad) {
+            this.setState({mapRegionInput: region});
+            this.setState({isFirstLoad: false});
         }
     }
 };

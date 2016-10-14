@@ -12,11 +12,8 @@ import {
 const MK = require('react-native-material-kit');
 const {
     MKButton,
-    MKColor,
 } = MK;
 
-import Store from '../store';
-import {observer} from "mobx-react/native";
 
 import {LOGGED_IN_USER_KEY} from "../constants";
 import {GoogleSignin, GoogleSigninButton} from 'react-native-google-signin';
@@ -26,13 +23,11 @@ const ColoredRaisedButton = MKButton.coloredButton()
     .withOnPress(() => {
         GoogleSignin.revokeAccess().then(() => GoogleSignin.signOut()).then(async () => {
             await AsyncStorage.removeItem(LOGGED_IN_USER_KEY);
-            Store.setLoggedInUser({});
         })
             .done();
     })
     .build();
 
-@observer
 export default class Settings extends Component{
 
     constructor(props) {
@@ -44,11 +39,11 @@ export default class Settings extends Component{
     }
 
     render() {
-        console.log('render settings with user: '+JSON.stringify(Store.loggedInUser));
+        console.log('render settings with user: '+JSON.stringify(this.props.loggedInUser));
         return (
             <View style={styles.container}>
                 {(() => {
-                    if (Store.loggedInUser.name) {
+                    if (this.props.loggedInUser && this.props.loggedInUser.name) {
                         return <ColoredRaisedButton/>
                     }
                     else {
@@ -76,7 +71,6 @@ export default class Settings extends Component{
 
             const user = await GoogleSignin.currentUserAsync();
             console.log(user);
-            Store.setLoggedInUser(user);
             await AsyncStorage.setItem(LOGGED_IN_USER_KEY, JSON.stringify(user));
         }
         catch(err) {
@@ -88,7 +82,6 @@ export default class Settings extends Component{
         GoogleSignin.signIn()
             .then(async (user) => {
                 console.log(user);
-                Store.setLoggedInUser(user);
                 await AsyncStorage.setItem(LOGGED_IN_USER_KEY, JSON.stringify(user));
             })
             .catch((err) => {
