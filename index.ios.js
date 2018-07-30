@@ -6,12 +6,14 @@
 
 import React, { Component } from 'react';
 import {
-    AppRegistry
+    AppRegistry,
+    AsyncStorage
 } from 'react-native';
 
 import App from "./app/app.ios";
 import NotificationsIOS, { NotificationAction, NotificationCategory } from 'react-native-notifications';
 import BackgroundGeolocation from "react-native-background-geolocation";
+import {LOGGED_IN_USER_KEY, API_URL} from "./app/constants";
 
 
 class NiyoRadar extends Component {
@@ -23,12 +25,10 @@ class NiyoRadar extends Component {
     this.initiateBackgroundLocationUpdate();
   }
 
-  initiateBackgroundLocationUpdate() {
+  async initiateBackgroundLocationUpdate() {
 
     BackgroundGeolocation.configure({
-      useSignificantChangesOnly: true,
-      url: 'http://10.0.0.6:5000/updateLocation',
-      debug: true
+      useSignificantChangesOnly: true
     }, function(state) {
       console.log("- BackgroundGeolocation is configured and ready: ", state.enabled);
 
@@ -40,8 +40,21 @@ class NiyoRadar extends Component {
     });
 
     // This handler fires whenever bgGeo receives a location update.
-    BackgroundGeolocation.on('location', function(location) {
+    BackgroundGeolocation.on('location', async function(location) {
       console.log('- [js]location: ', JSON.stringify(location));
+      var loggedInUserStr = await AsyncStorage.getItem(LOGGED_IN_USER_KEY);
+
+      if (loggedInUserStr) {
+        var loggedInUser = JSON.parse(loggedInUserStr);
+        fetch(API_URL+'/updateLocation', {
+          method: 'POST',
+          body: JSON.stringify({
+            location: location,
+            user: loggedInUser.email
+          })
+        })
+      }
+
     });
 
     // This handler fires whenever bgGeo receives an error

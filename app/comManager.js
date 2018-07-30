@@ -32,15 +32,17 @@ async function sendGetFriendsReq() {
 function init() {
     logger.debug('comManager init begins');
 
-    var url = 'http://10.0.0.6:5000';
+    var url = 'http://10.0.0.1:5000';
     // var url = 'http://localhost:5000';
 
     logger.debug('initializing socket connection to '+url+' process.platform: '+process.platform);
     socket = io(url, {jsonp: false});
 
     socket.on('locationUpdate', async (users) => {
+        var friendsStr = JSON.stringify(users);
         logger.debug('locationUpdate received with '+users.length+' friends');
-        await AsyncStorage.setItem(FRIENDS_KEY, JSON.stringify(users));
+        logger.debug('locationUpdate received with '+friendsStr);
+        await AsyncStorage.setItem(FRIENDS_KEY, friendsStr);
         Dispatcher.emit('locationsUpdated');
 
     });

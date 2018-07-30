@@ -2,7 +2,9 @@ import React, {Component} from 'react';
 import {
     View,
     AsyncStorage,
-    StyleSheet
+    StyleSheet,
+    TouchableOpacity,
+    Text
 } from 'react-native';
 
 import MapView from 'react-native-maps';
@@ -67,6 +69,7 @@ export default class MapComponent extends Component{
             <View style={styles.container}>
                 <MapView
                     style={styles.map}
+                    ref={ref => { this.map = ref; }}
                     onRegionChange={this._onRegionChange.bind(this)}
                     onRegionChangeComplete={this._onRegionChangeComplete.bind(this)}
                     region={this.state.mapRegionInput}
@@ -100,6 +103,7 @@ export default class MapComponent extends Component{
                             title={friend.name}
                             description={friend.email}
                             key={friend.email}
+                            onPress={() => {this.setState({selectedFriend: friend})}}
                         >
                             <View style={styles.container}>
                                 <FriendPin friendImage={friend.photo}/>
@@ -108,19 +112,58 @@ export default class MapComponent extends Component{
                     ))}
 
                 </MapView>
+                {this.renderArrowButton('leftArrow', '\u2190')}
+                {this.renderArrowButton('rightArrow', '\u2192')}
             </View>
         );
     }
 
+    renderArrowButton(arrow, innerText) {
+
+        if (this.state.selectedFriend) {
+            return (
+                <TouchableOpacity
+                    style={styles[arrow]}
+                    onPress={() => this.focusOnNextFriend()}
+                >
+                    <Text style={{ fontWeight: 'bold', fontSize: 30 }}>{innerText}</Text>
+                </TouchableOpacity>
+            );
+        }
+    }
+
+    focusOnNextFriend() {
+
+        let nextFriend = this.calculateNextFriend();
+        console.log('next friend is '+nextFriend.email);
+        this.map.animateToRegion({
+            latitude: nextFriend.location.latitude,
+            longitude: nextFriend.location.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421
+        });
+    }
+
+    calculateNextFriend() {
+        if (!this.state.selectedFriend) return this.state.friends[0];
+        let selectedFriendIndex = this.state.friends.indexOf(this.state.selectedFriend);
+        let f1 = this.state.friends.slice(selectedFriendIndex+1);
+
+        return f1.length ? f1[0] : this.state.friends[0];
+    }
+
     _onRegionChange(region) {
-        this.setState({mapRegionInput: region});
+        // this.setState({mapRegionInput: region});
     }
 
     _onRegionChangeComplete(region) {
-        if (this.state.isFirstLoad) {
-            this.setState({mapRegionInput: region});
-            this.setState({isFirstLoad: false});
-        }
+        // if (this.state.isFirstLoad) {
+            this.setState({
+                mapRegionInput: region,
+                selectedFriend: this.calculateNextFriend(),
+                isFirstLoad: false
+            });
+        // }
     }
 };
 
@@ -134,5 +177,28 @@ const styles = StyleSheet.create({
     wrapperImage: {
         flex: 1,
         height: 65
+    },
+    leftArrow: {
+        position: 'absolute',
+        bottom: 60,
+        left: 12,
+        backgroundColor: 'rgba(255,255,255,0.4)',
+        padding: 12,
+        borderRadius: 20,
+        width: 80,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    rightArrow: {
+        position: 'absolute',
+        bottom: 60,
+        right: 12,
+        backgroundColor: 'rgba(255,255,255,0.4)',
+        padding: 12,
+        borderRadius: 20,
+        width: 80,
+        alignItems: 'center',
+        justifyContent: 'center',
     }
+
 });

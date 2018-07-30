@@ -52,7 +52,7 @@ export default class App extends Component {
             <TabBarIOS
                 unselectedTintColor="gray"
                 tintColor="black"
-                barTintColor="#bae572">
+                barTintColor="#F7F3e8">
                 <Icon.TabBarItemIOS
                     title="Map"
                     selected={this.state.selectedTab === 'map'}
@@ -103,10 +103,10 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#F5FCFF',
+        backgroundColor: '#F7F3e8',
     },
     toolbar: {
-        backgroundColor: '#bae572'
+        backgroundColor: '#F7F3e8'
     },
     loginButton: {
         marginRight: 20,
